@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "42983009590",
+    "project_id": "flutter-firebase-app-cada2",
+    "storage_bucket": "flutter-firebase-app-cada2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:42983009590:android:8c0dcf0610a935ee2fd797",
+        "android_client_info": {
+          "package_name": "com.rizwan.flutterfirebaseapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "42983009590-jt5joucpcacjltfe6n251092lgg9295k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaKPH5I0iIrWM38zPgvZeaPUp3Bb054OY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "42983009590-jt5joucpcacjltfe6n251092lgg9295k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
