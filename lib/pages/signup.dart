@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../home.dart';
+import 'forgot_password.dart';
 import 'login.dart';
 
 class Signup extends StatefulWidget {
@@ -186,7 +187,7 @@ null;
 
                   TextButton(
                     onPressed: () {
-
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Login()));
                     },
                     child: Text("Login" ,style: TextStyle( fontSize: 16)),
                   )

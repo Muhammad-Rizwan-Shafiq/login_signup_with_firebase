@@ -1,56 +1,46 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_app/pages/forgot_password.dart';
+import 'package:flutter_firebase_app/pages/login.dart';
+import 'package:flutter_firebase_app/pages/signup.dart';
 
-import '../home.dart';
-
-class Login extends StatefulWidget {
+class ForgotPassword extends StatefulWidget {
   @override
-  _LoginState createState() => _LoginState();
+  _ForgotPasswordState createState() => _ForgotPasswordState();
 }
 
-class _LoginState extends State<Login> {
+class _ForgotPasswordState extends State<ForgotPassword> {
   final _formKey = GlobalKey<FormState>();
   var email = " ";
-  var password = " ";
   final emailController = TextEditingController();
-  final passwordController = TextEditingController();
 
-  userLogin() async{
-    try{
-      await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> Home()));
-    }
-    on FirebaseAuthException catch(error){
-      if(error.code == 'user-not-found'){
-        print("No User found with this Email Address");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.blueGrey,
-              content: Text("No User found with this Email Address",style: TextStyle(color: Colors.white),)
-          ),
-        );
-      }
-      else if(error.code == 'wrong-password'){
-        print("Wrong Password Provided by user");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              backgroundColor: Colors.blueGrey,
-              content: Text("Wrong Password Provided by user",style: TextStyle(color: Colors.white),)
-          ),
-        );
+  resetPassword() async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.blueGrey,
+          content: Text(
+            "Password reset email sent to your Email",
+            style: TextStyle(color: Colors.white),
+          )));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> Login()));
+    } on FirebaseAuthException catch (error) {
+      if (error.code == 'user-not-found') {
+        print("There is no user availible with this Email address");
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              "There is no user availible with this Email Address",
+              style: TextStyle(color: Colors.white),
+            )));
       }
     }
-
   }
 
   @override
   void dispose() {
     emailController.dispose();
-    passwordController.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +54,7 @@ class _LoginState extends State<Login> {
         key: _formKey,
         child: ListView(
           children: [
-            Image.asset("assets/images/login.jpg"),
+            Image.asset("assets/images/forget.jpg"),
             Padding(
               padding: EdgeInsets.all(_width * 0.03),
               child: TextFormField(
@@ -88,31 +78,14 @@ class _LoginState extends State<Login> {
                     hintStyle: TextStyle(fontFamily: "Montserrat-Regular"),
                     labelStyle: TextStyle(
                         color: Colors.black, fontFamily: "Montserrat-Regular")),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(_width * 0.03),
-              child: TextFormField(
-                controller: passwordController,
-                cursorColor: Colors.blue,
-                style: TextStyle(color: Colors.black),
-                decoration: InputDecoration(
-                    labelText: "Enter Password",
-                    fillColor: Colors.black,
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    enabledBorder: new OutlineInputBorder(
-                      borderRadius: new BorderRadius.circular(10.0),
-                      borderSide: new BorderSide(color: Colors.black),
-                    ),
-                    border: InputBorder.none,
-                    prefixIcon: Icon(Icons.mail),
-                    hintText: "Enter your password",
-                    hintStyle: TextStyle(fontFamily: "Montserrat-Regular"),
-                    labelStyle: TextStyle(
-                        color: Colors.black, fontFamily: "Montserrat-Regular")),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please insert your email";
+                  } else if (!value.contains("@")) {
+                    return "Please enter correct email ";
+                  }
+                  return null;
+                },
               ),
             ),
             Padding(
@@ -124,29 +97,28 @@ class _LoginState extends State<Login> {
                   RaisedButton(
                     color: Colors.blue,
                     onPressed: () {
-
                       setState(() {
-                        if(_formKey.currentState!.validate()){
-                          email=emailController.text;
-                          password=passwordController.text;
+                        if (_formKey.currentState!.validate()) {
+                          email = emailController.text;
                         }
                       });
-                      userLogin();
+                      resetPassword();
+
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        "Login",
+                        "Send Email",
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                     ),
                   ),
-                  SizedBox(width: 10,),
+                  SizedBox(
+                    width: 10,
+                  ),
                   TextButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> ForgotPassword()));
-                    },
-                    child: Text("Forgot Password ?"),
+                    onPressed: () {},
+                    child: Text("Login"),
                   )
                 ],
               ),
@@ -157,20 +129,16 @@ class _LoginState extends State<Login> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                 Text("Donot have an account ?"),
-
+                  Text("Donot have an account ?"),
                   TextButton(
                     onPressed: () {
-
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> Signup()));
                     },
-                    child: Text("Sign Up" ,style: TextStyle( fontSize: 16)),
+                    child: Text("Sign Up", style: TextStyle(fontSize: 16)),
                   )
                 ],
               ),
             ),
-
-
-
           ],
         ),
       ),
